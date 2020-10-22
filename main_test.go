@@ -36,6 +36,11 @@ func TestHStore(t *testing.T) {
 	if !reflect.DeepEqual(expectedValue, actualValue) {
 		t.Fatalf("Value  \n%v not equal to expected \n%v", actualValue, expectedValue)
 	}
+	actualValue, err = db.QueryValueHStoreToJson("path", "key")
+	failOnErr(err)
+	if !reflect.DeepEqual(expectedValue, actualValue) {
+		t.Fatalf("Value  \n%v not equal to expected \n%v", actualValue, expectedValue)
+	}
 }
 
 func BenchmarkJsonStoreInsert(b *testing.B) {
@@ -74,6 +79,17 @@ func BenchmarkHStoreQueryValue(b *testing.B) {
 	failOnErr(db.insert("path", "key", expectedValue))
 	for n := 0; n < b.N; n++ {
 		_, err := db.QueryValue("path", "key")
+		failOnErr(err)
+	}
+}
+
+func BenchmarkHStoreToJsonQueryValue(b *testing.B) {
+	db, err := InitHStore()
+	failOnErr(err)
+	failOnErr(db.clear())
+	failOnErr(db.insert("path", "key", expectedValue))
+	for n := 0; n < b.N; n++ {
+		_, err := db.QueryValueHStoreToJson("path", "key")
 		failOnErr(err)
 	}
 }

@@ -110,6 +110,7 @@ func (db JsonStore) QueryValue(path string, key string) (map[string]string, erro
 	return nil, nil
 }
 
+// manual parsing
 func (db HStore) QueryValue(path string, key string) (map[string]string, error) {
 	rows, err := db.connectionPool.Query(context.Background(), "SELECT value FROM kv_hstore WHERE path=$1 AND key=$2",
 		path, key)
@@ -136,6 +137,21 @@ func (db HStore) QueryValue(path string, key string) (map[string]string, error) 
 			result[key] = val
 		}
 		return result, nil
+	}
+	return nil, nil
+}
+
+func (db HStore) QueryValueHStoreToJson(path string, key string) (map[string]string, error) {
+	rows, err := db.connectionPool.Query(context.Background(), "SELECT hstore_to_json (value) FROM kv_hstore WHERE path=$1 AND key=$2",
+		path, key)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if rows.Next() {
+		var result map[string]string
+		err = rows.Scan(&result)
+		return result, err
 	}
 	return nil, nil
 }
