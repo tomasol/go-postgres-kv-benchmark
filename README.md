@@ -12,5 +12,5 @@ psql -h 127.0.0.1 -U postgres -d kvstore < migrations/*.sql
 
 ## Benchmarking
 ```sh
-go test -bench=.
+go test ./bench -bench=.
 ```
