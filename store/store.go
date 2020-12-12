@@ -43,7 +43,7 @@ func (db JsonStore) Close() {
 
 func (db JsonStore) Clear() error {
 	_, err := db.connectionPool.Exec(context.Background(),
-		"DELETE FROM kv_jsonb")
+		"DELETE FROM kv_json")
 	return err
 }
 
@@ -55,7 +55,7 @@ func (db HStore) Clear() error {
 
 func (db JsonStore) Insert(path string, key string, value map[string]string) error {
 	_, err := db.connectionPool.Exec(context.Background(),
-		"INSERT INTO kv_jsonb(path,key,value) VALUES ($1,$2,$3)",
+		"INSERT INTO kv_json(path,key,value) VALUES ($1,$2,$3)",
 		path, key, value,
 	)
 	return err
@@ -78,7 +78,7 @@ func (db HStore) Insert(path string, key string, value map[string]string) error 
 }
 
 func (db JsonStore) Count() (int, error) {
-	rows, err := db.connectionPool.Query(context.Background(), "SELECT COUNT(*) FROM kv_jsonb")
+	rows, err := db.connectionPool.Query(context.Background(), "SELECT COUNT(*) FROM kv_json")
 	if err != nil {
 		return 0, err
 	}
@@ -95,7 +95,7 @@ func (db JsonStore) Count() (int, error) {
 }
 
 func (db JsonStore) QueryValue(path string, key string) (map[string]string, error) {
-	rows, err := db.connectionPool.Query(context.Background(), "SELECT value FROM kv_jsonb WHERE path=$1 AND key=$2",
+	rows, err := db.connectionPool.Query(context.Background(), "SELECT value FROM kv_json WHERE path=$1 AND key=$2",
 		path, key)
 	if err != nil {
 		return nil, err

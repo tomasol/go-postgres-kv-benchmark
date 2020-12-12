@@ -5,6 +5,13 @@ CREATE TABLE kv_jsonb (
   CONSTRAINT kv_jsonb_pkey PRIMARY KEY (path, key)
 );
 
+CREATE TABLE kv_json (
+  path        TEXT COLLATE "C",
+  key         TEXT COLLATE "C",
+  value       JSON,
+  CONSTRAINT kv_json_pkey PRIMARY KEY (path, key)
+);
+
 CREATE EXTENSION hstore;
 
 CREATE TABLE kv_hstore (
